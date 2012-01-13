@@ -56,7 +56,7 @@ if (defined('ENVIRONMENT'))
  * as this file.
  *
  */
-	$system_path = '../codeigniter_201_system';
+	$system_path = '../codeigniter_fbapps_system';
 
 /*
  *---------------------------------------------------------------
@@ -191,6 +191,8 @@ if (defined('ENVIRONMENT'))
 		define('APPPATH', BASEPATH.$application_folder.'/');
 	}
 
+	define('BASEDIR',dirname(realpath(__FILE__)).'/');
+	set_include_path(BASEDIR.APPPATH.'libraries/');
 /*
  * --------------------------------------------------------------------
  * LOAD THE BOOTSTRAP FILE

@@ -19,7 +19,23 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
-		$this->load->view('welcome_message');
+		//$this->load->view('welcome_message');
+		$this->load->library('Auth');
+		$this->load->library('authadapter',array('username'=>'admin','password'=>'admin'));
+		
+		/* echo "<pre>";
+		print_r($this->auth);
+		exit;
+		 */
+		//$adapter = new MyAuthAdapter('admin', 'admin');
+         $result =   $this->auth->authenticate($this->authadapter);
+		 print_r($result);
+        if($this->auth->hasIdentity())
+        {
+            echo 'auth suceeeded foward to relavant page';
+			print_r($this->auth->getIdentity());
+			print_r($_SESSION);
+        } 
 	}
 }
 
