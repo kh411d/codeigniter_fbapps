@@ -21,7 +21,7 @@ class Welcome extends CI_Controller {
 	{
 		//$this->load->view('welcome_message');
 		$this->load->library('Auth');
-		$this->load->library('authadapter',array('username'=>'admin','password'=>'admin'));
+		$this->load->library('authadapter',array('identity'=>'admin','password'=>'admin'));
 		
 		/* echo "<pre>";
 		print_r($this->auth);
