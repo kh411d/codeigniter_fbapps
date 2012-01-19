@@ -20,22 +20,37 @@ class Welcome extends CI_Controller {
 	public function index()
 	{
 		//$this->load->view('welcome_message');
+		$this->load->model('customer_model');
 		$this->load->library('Auth');
 		$this->load->library('authadapter',array('identity'=>'admin','password'=>'admin'));
 		
+		$registrant_data = array('username' => 'ganteng',
+								 'email' => 'ganteng@gt.com',
+								 'password'=>'gembel',
+								 'name'=>'gantenging');
+								 
+	//	echo $this->customer_model->register($registrant_data);
+		
+	 $this->load->library('passwordhash',array('iteration'=>8,'portable'=>TRUE));
+	 $check = $this->passwordhash->CheckPassword('gembel', '$P$B.2bdBxStN.vMY5ZhuN6SPeUld/1mI.');
+	 echo $check;
+	 
 		/* echo "<pre>";
 		print_r($this->auth);
 		exit;
 		 */
 		//$adapter = new MyAuthAdapter('admin', 'admin');
-         $result =   $this->auth->authenticate($this->authadapter);
+		
+	/*  $result =   $this->auth->authenticate($this->authadapter);
 		 print_r($result);
         if($this->auth->hasIdentity())
         {
             echo 'auth suceeeded foward to relavant page';
 			print_r($this->auth->getIdentity());
 			print_r($_SESSION);
-        } 
+        }  */
+		
+
 	}
 }
 

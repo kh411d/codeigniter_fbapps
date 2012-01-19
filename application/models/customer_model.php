@@ -10,14 +10,12 @@
 	*
 	* Retrieve Customer Data 
 	*
-	* @param array('key' => 'email', 'value'=>example@example.com)
-	* key can be username, email, or customer_id
+	* @param array('key' => 'email or username or customer_id', 'value'=>example@example.com)
 	* 
-	* @return Customer Single array data row
-	*
+	* @return array Customer Single array data row
 	*/
 	
-	function retrieve(array $clauses)
+	public function retrieve(array $clauses)
 	{
 		$sql = $this->db->get_where('customer', $clauses);
 		
@@ -30,6 +28,28 @@
 		
 		return $results;
 	}
+	
+	
+	/*
+	*
+	* Add Record to customer Database
+	*
+	* @param array('username','email','password','name')
+	*
+	* @return int Last Insert customer_id
+	*/
+	
+	public function register(array $registrant_data)
+	{
+	 $this->load->library('passwordhash',array('iteration'=> 8,'portable'=> TRUE));
+	 $registrant_data['password'] = $this->passwordhash->HashPassword($registrant_data['password']);
+	 
+	  $sql = $this->db->insert('customer', $registrant_data); 
+
+	  return $this->db->insert_id();
+	}
+	
+	
 	
 	
    

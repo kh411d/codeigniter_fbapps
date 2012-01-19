@@ -8,14 +8,15 @@ class AuthAdapter implements Zend_Auth_Adapter_Interface
     protected $user;
     protected $password = "";
     protected $identity = "";       
+    protected $CI;
  
     public function __construct($params)
     {
+	    $this->CI = get_instance();
+	   
         $this->identity = $params['identity'];
         $this->password = $params['password'];
-        $this->load->model('customer_model');
-
- 
+        $this->CI->load->model('customer_model'); 
     }
  
     /**
@@ -48,7 +49,7 @@ class AuthAdapter implements Zend_Auth_Adapter_Interface
 	function fetchData($identity, $password)
     {
         
-        $data = $this->customer_model->retrieve(array('key'=>'email','value'=>$identity));
+        $data = $this->CI->customer_model->retrieve(array('key'=>'email','value'=>$identity));
 		
         if (!$data) {
 			throw new Exception(Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND);
@@ -122,7 +123,7 @@ class AuthAdapter implements Zend_Auth_Adapter_Interface
 	function verify_SHA1($plaintext,$hash,$password_salt)
 	{
 		$newHash = $this->generate_SHA1($plaintext,$password_salt);
-		return if($newHash == $hash) ? TRUE : FALSE;
+		return ($newHash == $hash) ? TRUE : FALSE;
 	}
 	
 	function verify_PHPass($plaintext,$hash)
