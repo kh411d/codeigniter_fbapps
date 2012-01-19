@@ -2,8 +2,6 @@
 require_once 'Zend/Auth/Adapter/Interface.php';
 class AuthAdapter implements Zend_Auth_Adapter_Interface
 {
-    const NOT_FOUND_MSG = "Account not found";
-    const BAD_PW_MSG = "Password is invalid";           
  
     protected $user;
     protected $password = "";
@@ -30,34 +28,46 @@ class AuthAdapter implements Zend_Auth_Adapter_Interface
         try
         {
             $result = $this->fetchData($this->identity, $this->password);
-            return $this->createResult(Zend_Auth_Result::SUCCESS);
+			$auth_data = $result;
+            return $this->createResult(Zend_Auth_Result::SUCCESS,$auth_data,self::message($e->getMessage()));
         }catch (Exception $e){
-            if($e->getMessage() == User::WRONG_PW)
-                return $this->createResult(Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID, array(self::BAD_PW_MSG));
+                return $this->createResult($e->getMessage(),NULL,self::message($e->getMessage()));
         } 
-		
-		
-		
+
 		return $this->createResult(Zend_Auth_Result::SUCCESS);
     }
+	
+	public static function message($const)
+	{
+		 switch($const){
+			case 0  : return lang('auth_failure'); break;
+			case -1 : return lang('auth_failure_identity_not_found'); break;
+			case -2 : return lang('auth_failure_identity_ambiguous'); break;
+			case -3 : return lang('auth_failure_credential_invalid'); break;
+			case -4 : return lang('auth_failure_uncategorized'); break;
+			case 1  : return lang('auth_success'); break;
+			default : return lang('auth_failure'); break;
+		 }
+	}
  
-    private function createResult($code,$identities, $messages = array())
+    private function createResult($code,$identities = NULL, $messages = array())
     {
         return new Zend_Auth_Result($code, $identities,$messages );
     }
 	
 	function fetchData($identity, $password)
     {
-        
-        $data = $this->CI->customer_model->retrieve(array('key'=>'email','value'=>$identity));
+        $r['key'] = 'email';
+		$r['value'] = $identity;
+        $data = $this->CI->customer_model->retrieve(array($r['key']=>$r['value']));
 		
         if (!$data) {
 			throw new Exception(Zend_Auth_Result::FAILURE_IDENTITY_NOT_FOUND);
                     return false;
 		}
 
-        if ($this->verifyPassword(trim($password, "\r\n"),trim($res['password'], "\r\n"),'md5')) {
-            return $data;
+        if ($this->verifyPassword(trim($password, "\r\n"),trim($data['password'], "\r\n"),'phpass')) {
+			return $data;
         }
 		
 		throw new Exception(Zend_Auth_Result::FAILURE_CREDENTIAL_INVALID);
@@ -92,6 +102,9 @@ class AuthAdapter implements Zend_Auth_Adapter_Interface
         case "md5" :
         	return (md5($password1) == $password2);
             break;
+		
+		case "phpass" :
+		   return $this->verify_PHPass($password1,$password2);
 
         default :
             if (function_exists($cryptType)) {
@@ -128,8 +141,8 @@ class AuthAdapter implements Zend_Auth_Adapter_Interface
 	
 	function verify_PHPass($plaintext,$hash)
 	{
-	 $this->load->library('passwordhash',array('iteration'=>8,'portable'=>TRUE));
-	 $check = $this->passwordhash->CheckPassword($plaintext, $hash);
+	 $this->CI->load->library('passwordhash',array('iteration'=>8,'portable'=>TRUE));
+	 $check = $this->CI->passwordhash->CheckPassword($plaintext, $hash);
 	 return $check;
 	}
 

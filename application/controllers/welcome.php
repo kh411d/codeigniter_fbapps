@@ -22,7 +22,7 @@ class Welcome extends CI_Controller {
 		//$this->load->view('welcome_message');
 		$this->load->model('customer_model');
 		$this->load->library('Auth');
-		$this->load->library('authadapter',array('identity'=>'admin','password'=>'admin'));
+		$this->load->library('authadapter',array('identity'=>'ganteng@gt.com','password'=>'gembel'));
 		
 		$registrant_data = array('username' => 'ganteng',
 								 'email' => 'ganteng@gt.com',
@@ -31,9 +31,9 @@ class Welcome extends CI_Controller {
 								 
 	//	echo $this->customer_model->register($registrant_data);
 		
-	 $this->load->library('passwordhash',array('iteration'=>8,'portable'=>TRUE));
+/* 	 $this->load->library('passwordhash',array('iteration'=>8,'portable'=>TRUE));
 	 $check = $this->passwordhash->CheckPassword('gembel', '$P$B.2bdBxStN.vMY5ZhuN6SPeUld/1mI.');
-	 echo $check;
+	 echo $check; */
 	 
 		/* echo "<pre>";
 		print_r($this->auth);
@@ -41,14 +41,15 @@ class Welcome extends CI_Controller {
 		 */
 		//$adapter = new MyAuthAdapter('admin', 'admin');
 		
-	/*  $result =   $this->auth->authenticate($this->authadapter);
+		$result =   $this->auth->authenticate($this->authadapter);
 		 print_r($result);
-        if($this->auth->hasIdentity())
+        
+		if($this->auth->hasIdentity())
         {
             echo 'auth suceeeded foward to relavant page';
 			print_r($this->auth->getIdentity());
 			print_r($_SESSION);
-        }  */
+        }  
 		
 
 	}

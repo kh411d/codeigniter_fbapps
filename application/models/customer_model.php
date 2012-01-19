@@ -17,14 +17,12 @@
 	
 	public function retrieve(array $clauses)
 	{
-		$sql = $this->db->get_where('customer', $clauses);
-		
-		$query = $this->db->query($sql);
-		$results = $query->row_array();
-		
+		$query = $this->db->get_where('customer', $clauses);	
 		if ($query->num_rows() <= 0) {
 			return false;
 		}
+		$results = $query->row_array();
+	
 		
 		return $results;
 	}
