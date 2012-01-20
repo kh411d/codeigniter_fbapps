@@ -29,9 +29,9 @@ class AuthAdapter implements Zend_Auth_Adapter_Interface
         {
             $result = $this->fetchData($this->identity, $this->password);
 			$auth_data = $result;
-            return $this->createResult(Zend_Auth_Result::SUCCESS,$auth_data,self::message($e->getMessage()));
+            return $this->createResult(Zend_Auth_Result::SUCCESS,$auth_data,array(self::message(Zend_Auth_Result::SUCCESS)));
         }catch (Exception $e){
-                return $this->createResult($e->getMessage(),NULL,self::message($e->getMessage()));
+                return $this->createResult($e->getMessage(),NULL,array(self::message($e->getMessage())));
         } 
 
 		return $this->createResult(Zend_Auth_Result::SUCCESS);
